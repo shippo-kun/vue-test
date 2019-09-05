@@ -7,4 +7,9 @@ describe('HelloWorld.vue', () => {
     const input = wrapper.findAll('[data-test="input"]');
     expect(input.exists()).toBe(true);
   });
+  it('inputの初期値は空です', () => {
+    const wrapper = shallowMount(HelloWorld);
+    const inputValue = wrapper.vm.$data.inputValue;
+    expect(inputValue).toBe('');
+  });
 });
