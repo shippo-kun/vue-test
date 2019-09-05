@@ -3,6 +3,7 @@
     <input
       data-test="input"
       v-model="inputValue"
+      @keyup.enter="searchContent"
     />
   </div>
 </template>
@@ -13,6 +14,13 @@ export default {
   data () {
     return {
       inputValue: ''
+    }
+  },
+  methods: {
+    searchContent() {
+      if (this.inputValue) {
+        this.$emit('search', this.inputValue)
+      }
     }
   }
 }

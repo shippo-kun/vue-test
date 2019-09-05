@@ -19,4 +19,11 @@ describe('HelloWorld.vue', () => {
     const inputValue = wrapper.vm.$data.inputValue;
     expect(inputValue).toBe('Python is the best language');
   });
+  it('inputのvalueが空の場合、Enter押してもmethod実行されない', () => {
+    const wrapper = shallowMount(HelloWorld);
+    const input = wrapper.findAll('[data-test="input"]');
+    input.setValue('');
+    input.trigger('keyup.enter');
+    expect(wrapper.emitted().search).toBeFalsy();
+  });
 });
