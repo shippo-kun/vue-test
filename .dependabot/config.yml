@@ -1,0 +1,15 @@
+version: 1
+
+update_configs:
+- package_manager: 'javascript'
+  directory: '/'
+  update_schedule: 'weekly'
+  target_branch: 'master'
+  default_reviewers:
+  - 'shippokun'
+  default_assignees:
+  - 'shippokun'
+  default_labels:
+  - 'dependabot 🤖'
+  commit_message:
+    prefix: "chore: "
