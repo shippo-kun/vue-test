@@ -1,0 +1,43 @@
+name: Node CI
+
+on: [pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/cache@v1
+        with:
+          path: ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Read .tool-versions
+        uses: marocchino/tool-versions-action@v1
+        id: asdf
+      - name: Use Node.js ${{ steps.asdf.outputs.nodejs }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ steps.asdf.outputs.nodejs }}
+      - run: yarn install
+      - run: yarn test:unit
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/cache@v1
+        with:
+          path: ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Read .tool-versions
+        uses: marocchino/tool-versions-action@v1
+        id: asdf
+      - name: Use Node.js ${{ steps.asdf.outputs.nodejs }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ steps.asdf.outputs.nodejs }}
+      - run: yarn install
+      - run: yarn lint
