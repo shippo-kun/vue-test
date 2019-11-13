@@ -22,10 +22,6 @@ jobs:
           node-version: ${{ steps.asdf.outputs.nodejs }}
       - run: yarn install
       - run: yarn test:unit
-      - run: yarn danger ci
-        env:
-          VUE_CLI_BABEL_TRANSPILE_MODULES: 1
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   lint:
     runs-on: ubuntu-latest
     steps:
