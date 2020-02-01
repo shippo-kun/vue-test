@@ -6,13 +6,14 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - uses: actions/cache@v1
+        id: cache
         with:
-          path: ~/.cache/yarn
-          key: ${{ runner.os }}-yarn-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.os }}-node-
       - name: Read .tool-versions
         uses: marocchino/tool-versions-action@v1
         id: asdf
@@ -20,18 +21,22 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ steps.asdf.outputs.nodejs }}
-      - run: yarn install
-      - run: yarn test:unit
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm install
+      - name: Unit Test
+        run: npm run test:unit
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - uses: actions/cache@v1
+        id: cache
         with:
-          path: ~/.cache/yarn
-          key: ${{ runner.os }}-yarn-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.os }}-node-
       - name: Read .tool-versions
         uses: marocchino/tool-versions-action@v1
         id: asdf
@@ -39,5 +44,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ steps.asdf.outputs.nodejs }}
-      - run: yarn install
-      - run: yarn lint
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm install
+      - name: Run Lint
+        run: npm run lint
